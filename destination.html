@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Destinations - Rael Escapes</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background: url('https://lp-cms-production.imgix.net/features/2019/05/Solo-Travel-in-Nature-acbfea52bfaf.jpg?w=1200&sharp=10&vib=20') no-repeat center center fixed; 
+            background-size: cover; 
+            color: white; 
+            text-align: center; 
+            min-height: 100vh; 
+        }
+        .container { 
+            width: 100%; 
+            min-height: 100vh; 
+            background: rgba(0, 0, 0, 0.6); 
+            backdrop-filter: blur(2px); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: flex-start; 
+            padding: 50px; 
+            animation: fadeIn 2s ease-in; 
+            position: relative;
+        }
+        h1 { 
+            font-size: 3.5rem; 
+            text-transform: uppercase; 
+            margin-bottom: 20px; 
+            letter-spacing: 2px; 
+            animation: slideDown 1.5s ease-in-out; 
+            margin-top: 50px;
+            text-align: center;
+            width: 100%;
+        }
+        .search-container {
+            width: 90%;
+            max-width: 800px;
+            margin: 20px auto;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            position: relative;
+        }
+        .search-input {
+            padding: 12px 20px;
+            font-size: 1rem;
+            border-radius: 50px;
+            border: none;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            width: 60%;
+            min-width: 250px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.3);
+        }
+        .autocomplete-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            margin-top: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            width: 60%;
+            min-width: 250px;
+        }
+        .autocomplete-dropdown.show {
+            display: block;
+        }
+        .autocomplete-item {
+            padding: 10px 20px;
+            cursor: pointer;
+            color: #333;
+            transition: all 0.2s ease;
+        }
+        .autocomplete-item:hover {
+            background: rgba(255, 87, 34, 0.1);
+        }
+        .autocomplete-item.selected {
+            background: rgba(255, 87, 34, 0.2);
+        }
+        .search-btn, .add-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(45deg, #ff5722, #e91e63);
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .search-btn:hover, .add-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
+            background: linear-gradient(45deg, #e91e63, #ff5722);
+        }
+        .destinations { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 30px; 
+            width: 90%; 
+            margin: 30px auto; 
+            max-width: 1400px;
+        }
+        .destination { 
+            background: rgba(255, 255, 255, 0.3); 
+            padding: 20px; 
+            border-radius: 15px; 
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); 
+            transition: transform 0.3s ease; 
+            animation: fadeInUp 1s ease-in; 
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .destination:hover { 
+            transform: scale(1.05); 
+            background: rgba(255, 255, 255, 0.6); 
+        }
+        .destination img { 
+            width: 100%; 
+            height: 200px; 
+            object-fit: cover; 
+            border-radius: 15px; 
+            margin-bottom: 15px;
+        }
+        .destination h2 { 
+            margin: 10px 0; 
+            font-size: 1.5rem; 
+            text-align: center;
+        }
+        .destination p { 
+            font-size: 1rem; 
+            margin-bottom: 15px;
+            text-align: center;
+            flex-grow: 1;
+        }
+        .price {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ff5722;
+            margin: 10px 0;
+            text-align: center;
+        }
+        .login-prompt {
+            background: linear-gradient(45deg, #ff5722, #e91e63);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            width: 100%;
+            margin-top: 10px;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(233, 30, 99, 0.3);
+            text-decoration: none;
+            display: inline-block;
+        }
+        .login-prompt:hover {
+            transform: scale(1.05);
+        }
+        .back { 
+            margin: 40px auto; 
+            text-decoration: none; 
+            color: white; 
+            background: linear-gradient(45deg, #ff5722, #e91e63); 
+            padding: 15px 30px; 
+            border-radius: 50px; 
+            font-size: 1.2rem; 
+            font-weight: bold; 
+            transition: transform 0.3s, background 0.3s; 
+            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+            display: inline-block;
+        }
+        .back:hover { 
+            background: linear-gradient(45deg, #e91e63, #ff5722); 
+            transform: scale(1.1); 
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeInUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Explore Our Destinations</h1>
+        <p>Discover amazing places around the world!</p>
+        
+        <div class="search-container">
+            <input type="text" class="search-input" id="search-input" placeholder="Search destinations...">
+            <div class="autocomplete-dropdown" id="autocomplete-dropdown"></div>
+            <button class="search-btn" onclick="searchDestinations()">Search</button>
+            <button class="add-btn" onclick="addDestination()">Add Destination</button>
+        </div>
+
+        <div class="destinations" id="destinations">
+            <!-- Destination cards will be added here -->
+        </div>
+
+        <a href="index.html" class="back">Back to Home</a>
+    </div>
+
+    <script>
+        const destinations = [
+            {name: 'Bali, Indonesia', image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=1000&q=80', desc: 'An island paradise with lush forests.', price: 85000},
+            {name: 'Paris, France', image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1000&q=80', desc: 'City of love with iconic landmarks.', price: 175000},
+            {name: 'Sydney, Australia', image: 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=1000&q=80', desc: 'Famous for the Opera House.', price: 195000},
+            {name: 'Rome, Italy', image: 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=1000&q=80', desc: 'Ancient ruins and rich history.', price: 145000},
+            {name: 'Dubai, UAE', image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=1000&q=80', desc: 'Modern architecture and luxury.', price: 125000},
+            {name: 'Kyoto, Japan', image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1000&q=80', desc: 'Tranquil temples and cherry blossoms.', price: 165000},
+            {name: 'Cape Town, SA', image: 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&w=1000&q=80', desc: 'Scenic views and vibrant culture.', price: 135000},
+            {name: 'Amsterdam, NL', image: 'https://images.unsplash.com/photo-1534351590666-13e3e96b5017?auto=format&fit=crop&w=1000&q=80', desc: 'Charming canals and rich art.', price: 155000},
+            {name: 'Barcelona, Spain', image: 'https://images.unsplash.com/photo-1583422409516-2895a77efded?auto=format&fit=crop&w=1000&q=80', desc: 'Gaudi architecture and beaches.', price: 145000},
+            {name: 'Prague, Czechia', image: 'https://images.unsplash.com/photo-1558056198-641a0ac8b55e?auto=format&fit=crop&w=1000&q=80', desc: 'Medieval charm and vibrant nightlife.', price: 115000},
+            {name: 'Istanbul, Turkey', image: 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=1000&q=80', desc: 'A mesmerizing blend of ancient architecture and vibrant culture.', price: 95000},
+            {name: 'Petra, Jordan', image: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1000&q=80', desc: 'An archaeological wonder carved into rose-red cliffs.', price: 105000},
+            {name: 'Vancouver, Canada', image: 'https://images.unsplash.com/photo-1509807995916-c332365e2d9e?auto=format&fit=crop&w=1000&q=80', desc: 'Stunning natural beauty with mountains and forests.', price: 185000},
+            {name: 'Reykjavik, Iceland', image: 'https://images.unsplash.com/photo-1529968030586-3a01fc6ac9ef?auto=format&fit=crop&w=1000&q=80', desc: 'Gateway to Northern Lights and geothermal wonders.', price: 195000},
+            {name: 'Havana, Cuba', image: 'https://images.unsplash.com/photo-1539037116277-4db20889f2d4?auto=format&fit=crop&w=1000&q=80', desc: 'Colorful streets and rich Cuban heritage.', price: 125000},
+            {name: 'Santorini, Greece', image: 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=1000&q=80', desc: 'Stunning white architecture and Mediterranean charm.', price: 155000},
+            {name: 'Machu Picchu, Peru', image: 'https://images.unsplash.com/photo-1525598912003-663126342e1f?auto=format&fit=crop&w=1000&q=80', desc: 'Ancient Incan citadel set high in the Andes Mountains.', price: 165000},
+            {name: 'Maldives', image: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=1000&q=80', desc: 'Crystal clear waters and overwater bungalows.', price: 225000},
+            {name: 'New York City, USA', image: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=1000&q=80', desc: 'The city that never sleeps with iconic skyline.', price: 185000},
+            {name: 'Venice, Italy', image: 'https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?auto=format&fit=crop&w=1000&q=80', desc: 'Romantic canals and historic architecture.', price: 165000},
+            {name: 'Great Barrier Reef, Australia', image: 'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=1000&q=80', desc: 'World\'s largest coral reef system with vibrant marine life.', price: 195000},
+            {name: 'Marrakech, Morocco', image: 'https://images.unsplash.com/photo-1553603227-2358affb1ab7?auto=format&fit=crop&w=1000&q=80', desc: 'Vibrant souks and stunning architecture.', price: 115000},
+            {name: 'Swiss Alps', image: 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?auto=format&fit=crop&w=1000&q=80', desc: 'Majestic mountains and pristine lakes.', price: 205000},
+            {name: 'Rio de Janeiro, Brazil', image: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=1000&q=80', desc: 'Vibrant culture and stunning beaches.', price: 175000},
+            {name: 'Taj Mahal, India', image: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=1000&q=80', desc: 'Iconic marble mausoleum and symbol of love.', price: 75000},
+            {name: 'Bangkok, Thailand', image: 'https://images.unsplash.com/photo-1528181304800-259b08848526?auto=format&fit=crop&w=1000&q=80', desc: 'Vibrant street life and ornate temples.', price: 95000},
+            {name: 'Copenhagen, Denmark', image: 'https://images.unsplash.com/photo-1513622470522-26c3c8a854bc?auto=format&fit=crop&w=1000&q=80', desc: 'Nordic charm and innovative design.', price: 185000},
+            {name: 'Cusco, Peru', image: 'https://images.unsplash.com/photo-1526392060635-9d6019884377?auto=format&fit=crop&w=1000&q=80', desc: 'Historic heart of the Inca Empire.', price: 145000},
+            {name: 'Hawaii, USA', image: 'https://images.unsplash.com/photo-1542259009477-d62545415737?auto=format&fit=crop&w=1000&q=80', desc: 'Tropical paradise with volcanic landscapes.', price: 195000},
+            {name: 'Jerusalem, Israel', image: 'https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?auto=format&fit=crop&w=1000&q=80', desc: 'Sacred city with rich religious history.', price: 155000}
+        ];
+
+        function loadDestinations(dests = destinations) {
+    const container = document.getElementById('destinations');
+            container.innerHTML = '';
+            dests.forEach(dest => {
+        const card = document.createElement('div');
+        card.className = 'destination';
+        card.innerHTML = `
+                    <img src="${dest.image}" alt="${dest.name}" onerror="this.src='https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1000&q=80'">
+            <h2>${dest.name}</h2>
+            <p>${dest.desc}</p>
+                    <div class="price">₹${dest.price.toLocaleString('en-IN')}</div>
+                    <a href="login.html" class="login-prompt">Login to Book</a>
+        `;
+        container.appendChild(card);
+    });
+}
+
+        function searchDestinations() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            if (!searchTerm) {
+                loadDestinations();
+                return;
+            }
+            
+            const filteredDestinations = destinations.filter(dest => 
+                dest.name.toLowerCase().includes(searchTerm) || 
+                dest.desc.toLowerCase().includes(searchTerm)
+            );
+            
+            loadDestinations(filteredDestinations);
+            
+            if (filteredDestinations.length === 0) {
+                alert('No destinations found matching your search.');
+            }
+        }
+
+        function initializeSearch() {
+            const searchInput = document.getElementById('search-input');
+            const autocompleteDropdown = document.getElementById('autocomplete-dropdown');
+
+            searchInput.addEventListener('input', function() {
+                const query = this.value.toLowerCase();
+                if (query.length < 1) {
+                    autocompleteDropdown.classList.remove('show');
+                    return;
+                }
+
+                const matches = destinations.filter(dest => 
+                    dest.name.toLowerCase().includes(query)
+                );
+
+                if (matches.length > 0) {
+                    autocompleteDropdown.innerHTML = matches
+                        .map(dest => `<div class="autocomplete-item">${dest.name}</div>`)
+                        .join('');
+                    autocompleteDropdown.classList.add('show');
+                } else {
+                    autocompleteDropdown.classList.remove('show');
+                }
+            });
+
+            // Handle click on autocomplete items
+            autocompleteDropdown.addEventListener('click', function(e) {
+                if (e.target.classList.contains('autocomplete-item')) {
+                    searchInput.value = e.target.textContent;
+                    autocompleteDropdown.classList.remove('show');
+                    
+                    // Filter destinations based on the selected item
+                    const selectedDest = destinations.find(dest => dest.name === e.target.textContent);
+                    if (selectedDest) {
+                        loadDestinations([selectedDest]);
+                    }
+                }
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!searchInput.contains(e.target) && !autocompleteDropdown.contains(e.target)) {
+                    autocompleteDropdown.classList.remove('show');
+                }
+            });
+
+            // Handle keyboard navigation
+            searchInput.addEventListener('keydown', function(e) {
+                const items = autocompleteDropdown.getElementsByClassName('autocomplete-item');
+                const currentItem = autocompleteDropdown.querySelector('.selected');
+                
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    if (!currentItem) {
+                        items[0]?.classList.add('selected');
+                    } else {
+                        const nextItem = currentItem.nextElementSibling;
+                        if (nextItem) {
+                            currentItem.classList.remove('selected');
+                            nextItem.classList.add('selected');
+                        }
+                    }
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    if (currentItem) {
+                        const prevItem = currentItem.previousElementSibling;
+                        if (prevItem) {
+                            currentItem.classList.remove('selected');
+                            prevItem.classList.add('selected');
+                        }
+                    }
+                } else if (e.key === 'Enter' && currentItem) {
+                    e.preventDefault();
+                    currentItem.click();
+                } else if (e.key === 'Escape') {
+                    autocompleteDropdown.classList.remove('show');
+                }
+            });
+        }
+
+        function addDestination() {
+            const name = prompt('Enter destination name:');
+            if (!name) return;
+      
+            const image = prompt('Enter image URL:');
+            if (!image) return;
+            
+            const desc = prompt('Enter destination description:');
+            if (!desc) return;
+      
+            const priceStr = prompt('Enter price in INR:');
+            if (!priceStr) return;
+            
+            const price = parseInt(priceStr);
+            if (isNaN(price) || price <= 0) {
+                alert('Please enter a valid price.');
+                return;
+            }
+            
+            // Check if destination already exists
+            const existingIndex = destinations.findIndex(dest => 
+                dest.name.toLowerCase() === name.toLowerCase()
+            );
+            
+            if (existingIndex !== -1) {
+                if (confirm('Destination already exists. Do you want to update it?')) {
+                    destinations[existingIndex] = { name, image, desc, price };
+                }
+            } else {
+                destinations.push({ name, image, desc, price });
+            }
+            
+            loadDestinations();
+        }
+
+        // Load destinations when the page loads
+        window.onload = function() {
+            loadDestinations();
+            initializeSearch();
+        };
+    </script>
+</body>
+</html>
+

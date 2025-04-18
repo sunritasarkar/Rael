@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - RaEl Escapes</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .chat-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        .chat-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff5722, #e91e63);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+            transition: all 0.3s ease;
+        }
+        .chat-button:hover {
+            transform: scale(1.1);
+        }
+        .chat-window {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 350px;
+            height: 450px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1000;
+        }
+        .chat-window.active {
+            display: flex;
+        }
+        .chat-header {
+            background: linear-gradient(45deg, #ff5722, #e91e63);
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        .message {
+            max-width: 80%;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-radius: 15px;
+            position: relative;
+        }
+        .user-message {
+            background: #f0f0f0;
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+        .bot-message {
+            background: #ffebee;
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
+        .chat-input {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #eee;
+        }
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            margin-right: 10px;
+        }
+        .chat-input button {
+            background: linear-gradient(45deg, #ff5722, #e91e63);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .close-chat {
+            cursor: pointer;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <section class="bg-gray-100 py-12 px-4">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-8 items-center">
+            <div>
+                <h2 class="text-3xl font-extrabold text-gray-800 mb-4">Get in Touch</h2>
+                <p class="text-gray-600 mb-6">We're here to help! Reach out to us with your travel dreams and let's make them a reality.</p>
+                <form class="space-y-4">
+                    <input type="text" placeholder="Name" class="w-full p-3 border border-gray-300 rounded">
+                    <input type="email" placeholder="Email Address" class="w-full p-3 border border-gray-300 rounded">
+                    <input type="tel" placeholder="Phone" class="w-full p-3 border border-gray-300 rounded">
+                    <textarea placeholder="Message" class="w-full p-3 border border-gray-300 rounded"></textarea>
+                    <button class="bg-red-500 text-white px-6 py-3 rounded hover:bg-red-600">Send Message</button>
+                </form>
+            </div>
+            <div class="w-full h-96 relative overflow-hidden">
+                <img src="https://png.pngtree.com/background/20230410/original/pngtree-travel-around-the-world-background-picture-image_2385120.jpg" alt="Scenic Destination" class="absolute inset-0 w-full h-full object-cover">
+            </div>
+        </div>
+    </section>
+    <section class="bg-white py-12 px-4 text-center">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">We Love to Hear From You</h2>
+        <p class="text-gray-600 mb-8">Contact us via our channels below.</p>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div>
+                <span class="text-red-500 text-3xl mb-2">📍</span>
+                <h3 class="text-lg font-semibold">Visit Us</h3>
+                <p>123 Dream Street, Wanderlust City</p>
+            </div>
+            <div>
+                <span class="text-red-500 text-3xl mb-2">📞</span>
+                <h3 class="text-lg font-semibold">Call Us</h3>
+                <p>+123 456 7890</p>
+            </div>
+            <div>
+                <span class="text-red-500 text-3xl mb-2">✉</span>
+                <h3 class="text-lg font-semibold">Email Us</h3>
+                <p>contact@raelscapes.com</p>
+            </div>
+        </div>
+    </section>
+    <section class="bg-gray-800 text-white py-8 text-center">
+        <h2 class="text-xl font-bold mb-2">Keep in Touch</h2>
+        <p class="mb-4">Subscribe to our newsletter for travel inspiration and exclusive deals.</p>
+        <form class="flex flex-col md:flex-row justify-center gap-2">
+            <input type="email" placeholder="Email" class="p-3 rounded text-gray-800">
+            <button class="bg-red-500 px-6 py-3 rounded hover:bg-red-600">Subscribe</button>
+        </form>
+    </section>
+    <div class="text-center py-6">
+        <a href="index.html" class="bg-blue-500 text-white px-6 py-3 rounded hover:bg-blue-600">Back to Home</a>
+    </div>
+
+    <!-- Chatbot -->
+    <div class="chat-container">
+        <div class="chat-button" id="chat-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+        </div>
+        <div class="chat-window" id="chat-window">
+            <div class="chat-header">
+                <h3>RaEl Escapes Assistant</h3>
+                <span class="close-chat" id="close-chat">×</span>
+            </div>
+            <div class="chat-messages" id="chat-messages">
+                <div class="message bot-message">Hello! I'm your RaEl Escapes travel assistant. How can I help you today?</div>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="user-input" placeholder="Type your message...">
+                <button id="send-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chatbot functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatButton = document.getElementById('chat-button');
+            const chatWindow = document.getElementById('chat-window');
+            const closeChat = document.getElementById('close-chat');
+            const chatMessages = document.getElementById('chat-messages');
+            const userInput = document.getElementById('user-input');
+            const sendButton = document.getElementById('send-button');
+
+            // Open chat window
+            chatButton.addEventListener('click', function() {
+                chatWindow.classList.add('active');
+            });
+
+            // Close chat window
+            closeChat.addEventListener('click', function() {
+                chatWindow.classList.remove('active');
+            });
+
+            // Send message function
+            function sendMessage() {
+                const message = userInput.value.trim();
+                if (message === '') return;
+
+                // Add user message to chat
+                addMessage(message, 'user');
+                
+                // Clear input
+                userInput.value = '';
+                
+                // Simulate bot response
+                setTimeout(() => {
+                    const botResponse = getBotResponse(message);
+                    addMessage(botResponse, 'bot');
+                }, 500);
+            }
+
+            // Add message to chat
+            function addMessage(text, sender) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message');
+                messageDiv.classList.add(sender === 'user' ? 'user-message' : 'bot-message');
+                messageDiv.textContent = text;
+                chatMessages.appendChild(messageDiv);
+                
+                // Scroll to bottom
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            // Simple bot responses
+            function getBotResponse(message) {
+                const lowerMessage = message.toLowerCase();
+                
+                if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+                    return "Hello! How can I assist you with your travel plans today?";
+                } else if (lowerMessage.includes('price') || lowerMessage.includes('cost') || lowerMessage.includes('budget')) {
+                    return "Our travel packages range from ₹75,000 to ₹225,000 depending on the destination and duration. Would you like to see our budget-friendly options?";
+                } else if (lowerMessage.includes('destination') || lowerMessage.includes('place') || lowerMessage.includes('where')) {
+                    return "We offer trips to over 25 destinations worldwide including Bali, Paris, Tokyo, and more. Is there a specific region you're interested in?";
+                } else if (lowerMessage.includes('book') || lowerMessage.includes('reserve') || lowerMessage.includes('trip')) {
+                    return "To book a trip, please visit our destinations page and click on 'Login to Book'. You'll need to create an account if you don't have one already.";
+                } else if (lowerMessage.includes('contact') || lowerMessage.includes('reach') || lowerMessage.includes('call')) {
+                    return "You can reach us at +123 456 7890 or email us at contact@raelscapes.com. Our office is located at 123 Dream Street, Wanderlust City.";
+                } else if (lowerMessage.includes('thank') || lowerMessage.includes('thanks')) {
+                    return "You're welcome! Is there anything else I can help you with?";
+                } else if (lowerMessage.includes('bye') || lowerMessage.includes('goodbye')) {
+                    return "Goodbye! Have a wonderful day and we hope to help you plan your next adventure soon!";
+                } else {
+                    return "I'm not sure I understand. Could you please rephrase your question? You can ask me about our destinations, prices, booking process, or contact information.";
+                }
+            }
+
+            // Send message on button click
+            sendButton.addEventListener('click', sendMessage);
+            
+            // Send message on Enter key
+            userInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+ 
