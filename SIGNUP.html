@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up - Freedom</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: url('https://wallpaperaccess.com/full/1431673.jpg') no-repeat fixed center;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .signup-container {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            padding: 40px;
+            width: 300px;
+            text-align: center;
+        }
+
+        h2 {
+            color: purple;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        button {
+            background: purple;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            width: 100%;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: pink;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+        }
+
+        .verification-section {
+            display: none;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+
+        .verification-section.show {
+            display: block;
+        }
+
+        .verification-code {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 10px 0;
+        }
+
+        .verification-code input {
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            font-size: 1.2em;
+        }
+
+        .timer {
+            color: #ff5722;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .resend-btn {
+            background: none;
+            border: none;
+            color: purple;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .resend-btn:disabled {
+            color: #999;
+            text-decoration: none;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+<div class="signup-container">
+    <h2>Create Your Account</h2>
+    <div id="signup-form">
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button onclick="sendVerification()">Sign Up</button>
+    </div>
+
+    <div id="verification-section" class="verification-section">
+        <h3>Email Verification</h3>
+        <p>We've sent a verification code to your email.</p>
+        <div class="verification-code">
+            <input type="text" maxlength="1" class="code-digit" onkeyup="moveToNext(this, 1)">
+            <input type="text" maxlength="1" class="code-digit" onkeyup="moveToNext(this, 2)">
+            <input type="text" maxlength="1" class="code-digit" onkeyup="moveToNext(this, 3)">
+            <input type="text" maxlength="1" class="code-digit" onkeyup="moveToNext(this, 4)">
+            <input type="text" maxlength="1" class="code-digit" onkeyup="moveToNext(this, 5)">
+            <input type="text" maxlength="1" class="code-digit" onkeyup="moveToNext(this, 6)">
+        </div>
+        <div class="timer" id="timer">Resend code in: <span id="countdown">60</span>s</div>
+        <button class="resend-btn" id="resend-btn" onclick="resendVerification()" disabled>Resend Code</button>
+        <button onclick="verifyCode()">Verify</button>
+    </div>
+
+    <div class="footer">Already have an account? 
+        <a href="login.html" style="color: purple;">Login</a>
+    </div>
+</div>
+
+<script>
+    let verificationCode = '';
+    let tempUserData = null;
+    let countdownInterval;
+
+    function generateVerificationCode() {
+        return Math.floor(100000 + Math.random() * 900000).toString();
+    }
+
+    function moveToNext(current, next) {
+        if (current.value.length === 1) {
+            const nextInput = document.querySelector(`.code-digit:nth-child(${next + 1})`);
+            if (nextInput) {
+                nextInput.focus();
+            }
+        }
+    }
+
+    function startCountdown() {
+        let timeLeft = 60;
+        const countdownElement = document.getElementById('countdown');
+        const resendButton = document.getElementById('resend-btn');
+        
+        resendButton.disabled = true;
+        
+        countdownInterval = setInterval(() => {
+            timeLeft--;
+            countdownElement.textContent = timeLeft;
+            
+            if (timeLeft <= 0) {
+                clearInterval(countdownInterval);
+                resendButton.disabled = false;
+            }
+        }, 1000);
+    }
+
+    function sendVerification() {
+        const username = document.getElementById('username').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        if (username === "" || email === "" || password === "") {
+            alert("Please fill in all fields.");
+            return;
+        }
+
+        // Check if email already exists
+        let users = JSON.parse(localStorage.getItem("users")) || [];
+        const existingUser = users.find(user => user.email === email);
+        if (existingUser) {
+            alert("An account with this email already exists.");
+            return;
+        }
+
+        // Generate and store verification code
+        verificationCode = generateVerificationCode();
+        tempUserData = { username, email, password };
+
+        // In a real application, you would send this code via email
+        // For demo purposes, we'll show it in an alert
+        alert(`Your verification code is: ${verificationCode}\n\nIn a real application, this would be sent to your email.`);
+
+        // Show verification section
+        document.getElementById('signup-form').style.display = 'none';
+        document.getElementById('verification-section').classList.add('show');
+        startCountdown();
+    }
+
+    function resendVerification() {
+        verificationCode = generateVerificationCode();
+        alert(`Your new verification code is: ${verificationCode}\n\nIn a real application, this would be sent to your email.`);
+        startCountdown();
+    }
+
+    function verifyCode() {
+        const enteredCode = Array.from(document.querySelectorAll('.code-digit'))
+            .map(input => input.value)
+            .join('');
+
+        if (enteredCode === verificationCode) {
+            // Store user data
+            let users = JSON.parse(localStorage.getItem("users")) || [];
+            users.push(tempUserData);
+            localStorage.setItem("users", JSON.stringify(users));
+
+            alert("Account created successfully! Please login.");
+            window.location.href = "login.html";
+        } else {
+            alert("Invalid verification code. Please try again.");
+            // Clear verification inputs
+            document.querySelectorAll('.code-digit').forEach(input => input.value = '');
+            document.querySelector('.code-digit').focus();
+        }
+    }
+
+    // Add event listeners for verification code inputs
+    document.querySelectorAll('.code-digit').forEach(input => {
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace' && !input.value) {
+                const prevInput = input.previousElementSibling;
+                if (prevInput) {
+                    prevInput.focus();
+                }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

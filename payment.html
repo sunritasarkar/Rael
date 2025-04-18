@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - Rael Escapes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+                        url('https://images.unsplash.com/photo-1488085061387-422e29b40080?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            color: white;
+        }
+
+        .header {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header h1 {
+            color: #ff5722;
+            font-size: 1.5rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 6rem auto 2rem;
+            padding: 20px;
+        }
+
+        .payment-form {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .order-summary {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .order-summary h3 {
+            color: #ff5722;
+            margin-bottom: 1rem;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .order-total {
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            color: #ff5722;
+            font-weight: bold;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #ff5722;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .payment-methods {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .payment-method {
+            padding: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .payment-method:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .payment-method.selected {
+            border-color: #ff5722;
+            background: rgba(255, 87, 34, 0.2);
+        }
+
+        .pay-button {
+            background: linear-gradient(45deg, #ff5722, #e91e63);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .pay-button:hover {
+            transform: scale(1.02);
+        }
+
+        .card-details, .upi-details, .netbanking-details {
+            display: none;
+        }
+
+        .back-button {
+            background: none;
+            border: 1px solid #ff5722;
+            color: #ff5722;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #ff5722;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Rael Escapes</h1>
+        <button class="back-button" onclick="window.location.href='travel-options.html'">Back to Travel Options</button>
+    </div>
+
+    <div class="container">
+        <div class="payment-form">
+            <div class="order-summary">
+                <h3>Order Summary</h3>
+                <div id="orderDetails"></div>
+                <div class="order-total" id="orderTotal"></div>
+            </div>
+
+            <h2 style="margin-bottom: 1.5rem; color: #ff5722;">Payment Details</h2>
+            
+            <div class="payment-methods">
+                <div class="payment-method" onclick="selectPaymentMethod('card')">
+                    <h3>Credit/Debit Card</h3>
+                </div>
+                <div class="payment-method" onclick="selectPaymentMethod('upi')">
+                    <h3>UPI</h3>
+                </div>
+                <div class="payment-method" onclick="selectPaymentMethod('netbanking')">
+                    <h3>Net Banking</h3>
+                </div>
+            </div>
+
+            <div id="cardDetails" class="card-details">
+                <div class="form-group">
+                    <label>Card Number</label>
+                    <input type="text" placeholder="1234 5678 9012 3456" maxlength="19">
+                </div>
+                <div class="form-group">
+                    <label>Card Holder Name</label>
+                    <input type="text" placeholder="John Doe">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label>Expiry Date</label>
+                        <input type="text" placeholder="MM/YY" maxlength="5">
+                    </div>
+                    <div class="form-group">
+                        <label>CVV</label>
+                        <input type="text" placeholder="123" maxlength="3">
+                    </div>
+                </div>
+            </div>
+
+            <div id="upiDetails" class="upi-details">
+                <div class="form-group">
+                    <label>UPI ID</label>
+                    <input type="text" placeholder="username@upi">
+                </div>
+            </div>
+
+            <div id="netbankingDetails" class="netbanking-details">
+                <div class="form-group">
+                    <label>Select Bank</label>
+                    <select>
+                        <option value="">Select your bank</option>
+                        <option value="sbi">State Bank of India</option>
+                        <option value="hdfc">HDFC Bank</option>
+                        <option value="icici">ICICI Bank</option>
+                        <option value="axis">Axis Bank</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="pay-button" onclick="processPayment()">Pay Now</button>
+        </div>
+    </div>
+
+    <script>
+        // Check if user is logged in
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (!currentUser) {
+            window.location.href = 'login.html';
+        }
+
+        // Load order details from localStorage
+        function loadOrderDetails() {
+            const selectedHotel = JSON.parse(localStorage.getItem('selectedHotel') || 'null');
+            const selectedTransport = JSON.parse(localStorage.getItem('selectedTransport') || 'null');
+            const cartData = JSON.parse(localStorage.getItem('cartData') || '[]');
+            
+            const orderDetailsDiv = document.getElementById('orderDetails');
+            const orderTotalDiv = document.getElementById('orderTotal');
+            
+            let totalAmount = 0;
+            let html = '';
+
+            // Add cart items
+            cartData.forEach(item => {
+                const amount = item.price * item.persons;
+                totalAmount += amount;
+                html += `
+                    <div class="order-item">
+                        <div>
+                            <strong>${item.name}</strong>
+                            <div>Persons: ${item.persons}</div>
+                        </div>
+                        <div>₹${amount.toLocaleString('en-IN')}</div>
+                    </div>
+                `;
+            });
+
+            // Add hotel if selected
+            if (selectedHotel) {
+                totalAmount += selectedHotel.price;
+                html += `
+                    <div class="order-item">
+                        <div>
+                            <strong>${selectedHotel.name}</strong>
+                            <div>${selectedHotel.priceType}</div>
+                        </div>
+                        <div>₹${selectedHotel.price.toLocaleString('en-IN')}</div>
+                    </div>
+                `;
+            }
+
+            // Add transport if selected
+            if (selectedTransport) {
+                let transportTotal = selectedTransport.price;
+                let transportText = '';
+                
+                if (selectedTransport.priceType === 'per person') {
+                    // Calculate total for all persons in cart
+                    const totalPersons = cartData.reduce((sum, item) => sum + item.persons, 0);
+                    transportTotal = selectedTransport.price * totalPersons;
+                    transportText = `(${totalPersons} person${totalPersons > 1 ? 's' : ''})`;
+                }
+                
+                totalAmount += transportTotal;
+                html += `
+                    <div class="order-item">
+                        <div>
+                            <strong>${selectedTransport.name}</strong>
+                            <div>${transportText}</div>
+                        </div>
+                        <div>₹${transportTotal.toLocaleString('en-IN')}</div>
+                    </div>
+                `;
+            }
+
+            orderDetailsDiv.innerHTML = html;
+            orderTotalDiv.innerHTML = `Total Amount: ₹${totalAmount.toLocaleString('en-IN')}`;
+        }
+
+        function selectPaymentMethod(method) {
+            // Remove selected class from all methods
+            document.querySelectorAll('.payment-method').forEach(el => {
+                el.classList.remove('selected');
+            });
+
+            // Add selected class to clicked method
+            event.currentTarget.classList.add('selected');
+
+            // Hide all payment detail sections
+            document.getElementById('cardDetails').style.display = 'none';
+            document.getElementById('upiDetails').style.display = 'none';
+            document.getElementById('netbankingDetails').style.display = 'none';
+
+            // Show selected payment detail section
+            document.getElementById(method + 'Details').style.display = 'block';
+        }
+
+        function processPayment() {
+            const selectedMethod = document.querySelector('.payment-method.selected');
+            if (!selectedMethod) {
+                alert('Please select a payment method');
+                return;
+            }
+
+            // Here you would typically integrate with a payment gateway
+            alert('Payment processed successfully!');
+            
+            // Clear the cart and selected options after successful payment
+            localStorage.removeItem('cartData');
+            localStorage.removeItem('selectedHotel');
+            localStorage.removeItem('selectedTransport');
+            
+            // Redirect to confirmation page
+            window.location.href = 'confirmation.html';
+        }
+
+        // Load order details when page loads
+        loadOrderDetails();
+    </script>
+</body>
+</html> 

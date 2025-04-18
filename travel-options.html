@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Options - Rael Escapes</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+                        url('https://images.unsplash.com/photo-1488085061387-422e29b40080?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center fixed; 
+            background-size: cover; 
+            color: white; 
+            text-align: center; 
+            min-height: 100vh;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 87, 34, 0.2) 0%, rgba(233, 30, 99, 0.2) 100%);
+            pointer-events: none;
+            z-index: 1;
+        }
+        .container { 
+            width: 100%; 
+            min-height: 100vh; 
+            background: rgba(0, 0, 0, 0.5); 
+            backdrop-filter: blur(5px); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: flex-start; 
+            padding: 50px; 
+            animation: fadeIn 1s ease-in; 
+            position: relative;
+            z-index: 2;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 20px 50px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .user-info span {
+            color: #ff5722;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        .logout-btn {
+            background: linear-gradient(45deg, #ff5722, #e91e63);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(233, 30, 99, 0.3);
+        }
+        .logout-btn:hover {
+            transform: scale(1.1);
+        }
+        h1 { 
+            font-size: 3rem; 
+            text-transform: uppercase; 
+            margin-bottom: 20px; 
+            letter-spacing: 2px; 
+            animation: slideDown 1.5s ease-in-out; 
+            margin-top: 100px;
+            text-align: center;
+            width: 100%;
+            color: #ff5722;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            color: #fff;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .option-section {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease;
+        }
+        .option-section:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.25);
+        }
+        .option-section h2 {
+            color: #ff5722;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+        .option-card {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .option-card:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        .option-card.selected {
+            border-color: #ff5722;
+            background: rgba(255, 87, 34, 0.2);
+        }
+        .option-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 15px 15px 0 0;
+        }
+        .option-card-content {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .option-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        .option-card p {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            color: rgba(255, 255, 255, 0.9);
+            flex-grow: 1;
+        }
+        .option-card .price {
+            font-weight: bold;
+            color: #ff5722;
+            font-size: 1.3rem;
+            margin-top: auto;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .option-card .price-tag {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 87, 34, 0.9);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        .option-card .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .feature-tag {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+        .cart-summary {
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 40px;
+            backdrop-filter: blur(10px);
+        }
+        .cart-summary h2 {
+            color: #ff5722;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+        .cart-items {
+            margin-bottom: 30px;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1.1rem;
+        }
+        .cart-total {
+            font-size: 1.8rem;
+            color: #ff5722;
+            margin: 30px 0;
+            text-transform: uppercase;
+            text-align: center;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .back-to-destinations-btn {
+            padding: 15px 30px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            background: transparent;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            flex: 1;
+        }
+        .back-to-destinations-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        .proceed-to-checkout-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            background: #ff5722;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            flex: 1;
+            box-shadow: 0 4px 15px rgba(255, 87, 34, 0.3);
+        }
+        .proceed-to-checkout-btn:hover {
+            background: #ff7043;
+            transform: translateY(-2px);
+        }
+        .section-description {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.5;
+        }
+        .option-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .option-badge.budget {
+            background: rgba(76, 175, 80, 0.8);
+        }
+        .option-badge.midrange {
+            background: rgba(33, 150, 243, 0.8);
+        }
+        .option-badge.luxury {
+            background: rgba(233, 30, 99, 0.8);
+        }
+        .option-badge.resort {
+            background: rgba(255, 152, 0, 0.8);
+        }
+        .option-badge.economy {
+            background: rgba(76, 175, 80, 0.8);
+        }
+        .option-badge.business {
+            background: rgba(33, 150, 243, 0.8);
+        }
+        .option-badge.first {
+            background: rgba(233, 30, 99, 0.8);
+        }
+        .option-badge.private {
+            background: rgba(156, 39, 176, 0.8);
+        }
+        .budget-comparison {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        .budget-comparison h2 {
+            color: #ff5722;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .budget-comparison p {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.5;
+        }
+        .comparison-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .tab {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+        .tab:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .tab.active {
+            background: linear-gradient(45deg, #ff5722, #e91e63);
+            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+        }
+        .comparison-content {
+            display: none;
+        }
+        .comparison-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .comparison-card {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+        .comparison-card:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-5px);
+        }
+        .comparison-card h3 {
+            color: #ff5722;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .comparison-card .price {
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #4CAF50;
+        }
+        .comparison-card .price.extra {
+            color: #ff5722;
+        }
+        .comparison-card ul {
+            text-align: left;
+            list-style-type: none;
+            margin-bottom: 15px;
+        }
+        .comparison-card li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 25px;
+        }
+        .comparison-card li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .comparison-card li.extra:before {
+            content: "+";
+            color: #ff5722;
+        }
+        .comparison-card .upgrade-btn {
+            background: linear-gradient(45deg, #ff5722, #e91e63);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            margin-top: 10px;
+            display: inline-block;
+        }
+        .comparison-card .upgrade-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(233, 30, 99, 0.3);
+        }
+        .comparison-card .upgrade-btn.secondary {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        .comparison-card .upgrade-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        .location-input-container {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .location-input {
+            padding: 12px 20px;
+            border-radius: 50px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            width: 60%;
+            min-width: 250px;
+            transition: all 0.3s ease;
+        }
+        .location-input:focus {
+            outline: none;
+            border-color: #ff5722;
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .location-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .save-location-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(45deg, #ff5722, #e91e63);
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            min-width: 180px;
+        }
+        .save-location-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
+            background: linear-gradient(45deg, #e91e63, #ff5722);
+        }
+        .save-location-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 10px rgba(233, 30, 99, 0.3);
+        }
+        .location-display {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: rgba(255, 87, 34, 0.2);
+            border-radius: 10px;
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+        .location-display.active {
+            display: block;
+        }
+        .location-display span {
+            font-weight: bold;
+            color: #ff5722;
+        }
+        .back-to-home {
+            display: inline-block;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(45deg, #ff5722, #e91e63);
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            margin: 40px auto;
+        }
+        .back-to-home:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
+            background: linear-gradient(45deg, #e91e63, #ff5722);
+        }
+        .back-to-home:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 10px rgba(233, 30, 99, 0.3);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="user-info">
+            <span id="welcome-message">Welcome, </span>
+        </div>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+    <div class="container">
+        <h1>Travel Options</h1>
+        <p class="subtitle">Select your preferred hotel type and mode of transport</p>
+        
+        <div class="options-container">
+            <div class="option-section">
+                <h2>Your Location</h2>
+                <p class="section-description">Please enter your departure location so we can provide accurate travel options and pricing.</p>
+                <div class="location-input-container">
+                    <input type="text" id="departure-location" placeholder="Enter your city or airport code" class="location-input">
+                    <button class="save-location-btn" onclick="saveLocation()">Save Location</button>
+                </div>
+                <div id="location-display" class="location-display"></div>
+            </div>
+            
+            <div class="option-section">
+                <h2>Hotel Options</h2>
+                <p class="section-description">Choose from our range of accommodations to suit your comfort and budget preferences. Each option offers different amenities and experiences.</p>
+                <div class="options-grid" id="hotel-options">
+                    <!-- Hotel options will be added here -->
+                </div>
+            </div>
+            
+            <div class="option-section">
+                <h2>Transportation Options</h2>
+                <p class="section-description">Select your preferred mode of travel. From budget-friendly economy to luxurious private jets, we have options for every traveler.</p>
+                <div class="options-grid" id="transport-options">
+                    <!-- Transport options will be added here -->
+                </div>
+            </div>
+            
+            <div class="budget-comparison">
+                <h2>Budget Comparison</h2>
+                <p>See what's included in your base budget and what additional options are available with extra money.</p>
+                
+                <div class="comparison-tabs">
+                    <div class="tab active" onclick="showComparison('hotels')">Hotels</div>
+                    <div class="tab" onclick="showComparison('transport')">Transportation</div>
+                </div>
+                
+                <div id="hotels-comparison" class="comparison-content active">
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h3>Budget Hotel</h3>
+                            <div class="price">₹2,000 per night</div>
+                            <ul>
+                                <li>Clean, comfortable room</li>
+                                <li>Private bathroom</li>
+                                <li>Air conditioning</li>
+                                <li>Free WiFi</li>
+                                <li>TV with basic channels</li>
+                                <li>Daily housekeeping</li>
+                            </ul>
+                            <button class="upgrade-btn secondary" onclick="selectHotel('budget')">Select</button>
+                        </div>
+                        
+                        <div class="comparison-card">
+                            <h3>Mid-Range Hotel</h3>
+                            <div class="price">₹5,000 per night</div>
+                            <div class="price extra">+₹3,000 per night</div>
+                            <ul>
+                                <li>All Budget Hotel features</li>
+                                <li>Larger room with better view</li>
+                                <li>Room service</li>
+                                <li>Fitness center access</li>
+                                <li>Restaurant on-site</li>
+                                <li>Premium TV channels</li>
+                                <li>Concierge service</li>
+                            </ul>
+                            <button class="upgrade-btn" onclick="selectHotel('midrange')">Upgrade</button>
+                        </div>
+                        
+                        <div class="comparison-card">
+                            <h3>Luxury Hotel</h3>
+                            <div class="price">₹10,000 per night</div>
+                            <div class="price extra">+₹5,000 per night</div>
+                            <ul>
+                                <li>All Mid-Range features</li>
+                                <li>Luxury suite with separate living area</li>
+                                <li>Premium amenities and toiletries</li>
+                                <li>Spa access</li>
+                                <li>Valet parking</li>
+                                <li>Butler service</li>
+                                <li>Exclusive lounge access</li>
+                            </ul>
+                            <button class="upgrade-btn" onclick="selectHotel('luxury')">Upgrade</button>
+                        </div>
+                        
+                        <div class="comparison-card">
+                            <h3>Resort</h3>
+                            <div class="price">₹15,000 per night</div>
+                            <div class="price extra">+₹5,000 per night</div>
+                            <ul>
+                                <li>All Luxury Hotel features</li>
+                                <li>Beachfront or scenic location</li>
+                                <li>Multiple restaurants and bars</li>
+                                <li>Pool and water activities</li>
+                                <li>Organized activities and entertainment</li>
+                                <li>Kids club</li>
+                                <li>All-inclusive dining options</li>
+                            </ul>
+                            <button class="upgrade-btn" onclick="selectHotel('resort')">Upgrade</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="transport-comparison" class="comparison-content">
+                    <div class="comparison-grid">
+                        <div class="comparison-card">
+                            <h3>Economy Class</h3>
+                            <div class="price">₹5,000 per person</div>
+                            <ul>
+                                <li>Standard seat with adequate legroom</li>
+                                <li>Meal service</li>
+                                <li>Entertainment system</li>
+                                <li>Standard baggage allowance</li>
+                                <li>In-flight refreshments</li>
+                                <li>Priority boarding (optional)</li>
+                            </ul>
+                            <button class="upgrade-btn secondary" onclick="selectTransport('economy')">Select</button>
+                        </div>
+                        
+                        <div class="comparison-card">
+                            <h3>Business Class</h3>
+                            <div class="price">₹15,000 per person</div>
+                            <div class="price extra">+₹10,000 per person</div>
+                            <ul>
+                                <li>All Economy features</li>
+                                <li>Larger, more comfortable seat</li>
+                                <li>Lounge access before flight</li>
+                                <li>Priority check-in and boarding</li>
+                                <li>Premium meal service</li>
+                                <li>Increased baggage allowance</li>
+                                <li>Enhanced entertainment options</li>
+                            </ul>
+                            <button class="upgrade-btn" onclick="selectTransport('business')">Upgrade</button>
+                        </div>
+                        
+                        <div class="comparison-card">
+                            <h3>First Class</h3>
+                            <div class="price">₹30,000 per person</div>
+                            <div class="price extra">+₹15,000 per person</div>
+                            <ul>
+                                <li>All Business Class features</li>
+                                <li>Private suite with lie-flat bed</li>
+                                <li>Exclusive lounge access</li>
+                                <li>Gourmet dining experience</li>
+                                <li>Dedicated flight attendant</li>
+                                <li>Maximum baggage allowance</li>
+                                <li>Luxury amenity kit</li>
+                            </ul>
+                            <button class="upgrade-btn" onclick="selectTransport('first')">Upgrade</button>
+                        </div>
+                        
+                        <div class="comparison-card">
+                            <h3>Private Jet</h3>
+                            <div class="price">₹100,000 total</div>
+                            <div class="price extra">+₹70,000 total</div>
+                            <ul>
+                                <li>Complete privacy</li>
+                                <li>Flexible scheduling</li>
+                                <li>No security lines</li>
+                                <li>Personalized service</li>
+                                <li>Luxury amenities</li>
+                                <li>Gourmet dining</li>
+                                <li>Dedicated crew</li>
+                            </ul>
+                            <button class="upgrade-btn" onclick="selectTransport('private')">Upgrade</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="cart-summary">
+                <h2>YOUR TRIP SUMMARY</h2>
+                <div class="cart-items" id="cart-items">
+                    <!-- Cart items will be added here -->
+                </div>
+                <div class="cart-total">Total: ₹<span id="cart-total">95,000</span></div>
+                <div class="buttons">
+                    <button class="back-to-destinations-btn" onclick="goBack()">BACK TO DESTINATIONS</button>
+                    <button class="proceed-to-checkout-btn" onclick="proceedToCheckout()">PROCEED TO CHECKOUT</button>
+                </div>
+            </div>
+        </div>
+        
+        <a href="index.html" class="back-to-home">Back to Home</a>
+    </div>
+
+    <script>
+        // Check if user is logged in
+        function checkAuth() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+            document.getElementById('welcome-message').textContent = `Welcome, ${currentUser.username}`;
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'login.html';
+        }
+
+        // Save departure location
+        function saveLocation() {
+            const locationInput = document.getElementById('departure-location');
+            const locationDisplay = document.getElementById('location-display');
+            const location = locationInput.value.trim();
+            
+            if (location === '') {
+                alert('Please enter a valid departure location.');
+                return;
+            }
+            
+            // Save location to localStorage
+            localStorage.setItem('departureLocation', location);
+            
+            // Display the saved location
+            locationDisplay.innerHTML = `Departure location set to: <span>${location}</span>`;
+            locationDisplay.classList.add('active');
+            
+            // Update cart summary to include location
+            updateCartSummary();
+        }
+
+        // Hotel options data
+        const hotelOptions = [
+            {
+                id: 'budget',
+                name: 'Budget Hotel',
+                image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+                description: 'Comfortable and affordable accommodation with basic amenities. Perfect for travelers on a budget who want a clean place to rest.',
+                price: 2000,
+                priceType: 'per night',
+                features: ['Free WiFi', 'Air Conditioning', 'TV', 'Private Bathroom']
+            },
+            {
+                id: 'midrange',
+                name: 'Mid-Range Hotel',
+                image: 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+                description: 'Quality accommodation with good amenities and service. Ideal for travelers seeking comfort without breaking the bank.',
+                price: 5000,
+                priceType: 'per night',
+                features: ['Free WiFi', 'Air Conditioning', 'TV', 'Private Bathroom', 'Room Service', 'Fitness Center', 'Restaurant']
+            },
+            {
+                id: 'luxury',
+                name: 'Luxury Hotel',
+                image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+                description: 'Premium accommodation with exceptional amenities and service. Experience the ultimate in comfort and luxury during your stay.',
+                price: 10000,
+                priceType: 'per night',
+                features: ['Free WiFi', 'Air Conditioning', 'TV', 'Private Bathroom', 'Room Service', 'Fitness Center', 'Restaurant', 'Spa', 'Concierge', 'Valet Parking']
+            },
+            {
+                id: 'resort',
+                name: 'Resort',
+                image: 'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+                description: 'All-inclusive resort with extensive facilities and activities. Perfect for a complete vacation experience with everything included.',
+                price: 15000,
+                priceType: 'per night',
+                features: ['Free WiFi', 'Air Conditioning', 'TV', 'Private Bathroom', 'Room Service', 'Fitness Center', 'Restaurant', 'Spa', 'Concierge', 'Valet Parking', 'Beach Access', 'Pool', 'Activities']
+            }
+        ];
+
+        // Transport options data
+        const transportOptions = [
+            {
+                id: 'economy',
+                name: 'Economy Class',
+                image: 'https://images.unsplash.com/photo-1570710891163-6d3b5c47248b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+                description: 'Standard travel with essential comforts. Perfect for budget-conscious travelers who want to reach their destination affordably.',
+                price: 5000,
+                priceType: 'per person',
+                features: ['Standard Seat', 'Meal Service', 'Entertainment System', 'Baggage Allowance']
+            },
+            {
+                id: 'business',
+                name: 'Business Class',
+                image: 'https://images.unsplash.com/photo-1588615293915-88e504497f11?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+                description: 'Enhanced comfort with premium service and amenities. Ideal for business travelers or those seeking a more comfortable journey.',
+                price: 15000,
+                priceType: 'per person',
+                features: ['Lounge Access', 'Priority Check-in', 'Larger Seat', 'Premium Meals', 'Enhanced Entertainment', 'Increased Baggage Allowance']
+            },
+            {
+                id: 'first',
+                name: 'First Class',
+                image: 'https://images.unsplash.com/photo-1559627753-7a4c4ea7b8d8?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+                description: 'Luxury travel experience with the highest level of comfort. Experience unparalleled luxury and service during your journey.',
+                price: 30000,
+                priceType: 'per person',
+                features: ['Private Suite', 'Lounge Access', 'Priority Check-in', 'Luxury Amenities', 'Gourmet Dining', 'Premium Entertainment', 'Maximum Baggage Allowance', 'Dedicated Staff']
+            },
+            {
+                id: 'private',
+                name: 'Private Jet',
+                image: 'https://images.unsplash.com/photo-1540962351504-03099e0a754b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+                description: 'Exclusive travel with personalized service and flexibility. The ultimate luxury travel experience with complete privacy and convenience.',
+                price: 100000,
+                priceType: 'total',
+                features: ['Private Aircraft', 'Flexible Schedule', 'Personalized Service', 'Luxury Amenities', 'Gourmet Dining', 'Maximum Privacy', 'No Security Lines', 'Dedicated Crew']
+            }
+        ];
+
+        // Selected options
+        let selectedHotel = null;
+        let selectedTransport = null;
+        let cart = [];
+
+        // Load hotel options
+        function loadHotelOptions() {
+            const container = document.getElementById('hotel-options');
+            container.innerHTML = '';
+            
+            hotelOptions.forEach(hotel => {
+                const card = document.createElement('div');
+                card.className = 'option-card';
+                card.id = `hotel-${hotel.id}`;
+                card.onclick = () => selectHotel(hotel.id);
+                
+                let featuresHTML = '';
+                if (hotel.features) {
+                    featuresHTML = '<div class="features">';
+                    hotel.features.forEach(feature => {
+                        featuresHTML += `<span class="feature-tag">${feature}</span>`;
+                    });
+                    featuresHTML += '</div>';
+                }
+                
+                card.innerHTML = `
+                    <div class="option-badge ${hotel.id}">${hotel.id}</div>
+                    <img src="${hotel.image}" alt="${hotel.name}">
+                    <div class="option-card-content">
+                        <h3>${hotel.name}</h3>
+                        <p>${hotel.description}</p>
+                        ${featuresHTML}
+                        <div class="price">₹${hotel.price.toLocaleString('en-IN')} ${hotel.priceType}</div>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        // Load transport options
+        function loadTransportOptions() {
+            const container = document.getElementById('transport-options');
+            container.innerHTML = '';
+            
+            transportOptions.forEach(transport => {
+                const card = document.createElement('div');
+                card.className = 'option-card';
+                card.id = `transport-${transport.id}`;
+                card.onclick = () => selectTransport(transport.id);
+                
+                let featuresHTML = '';
+                if (transport.features) {
+                    featuresHTML = '<div class="features">';
+                    transport.features.forEach(feature => {
+                        featuresHTML += `<span class="feature-tag">${feature}</span>`;
+                    });
+                    featuresHTML += '</div>';
+                }
+                
+                card.innerHTML = `
+                    <div class="option-badge ${transport.id}">${transport.id}</div>
+                    <img src="${transport.image}" alt="${transport.name}">
+                    <div class="option-card-content">
+                        <h3>${transport.name}</h3>
+                        <p>${transport.description}</p>
+                        ${featuresHTML}
+                        <div class="price">₹${transport.price.toLocaleString('en-IN')} ${transport.priceType}</div>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        // Select hotel option
+        function selectHotel(hotelId) {
+            // Remove selection from all hotel cards
+            document.querySelectorAll('#hotel-options .option-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Add selection to the clicked card
+            const selectedCard = document.getElementById(`hotel-${hotelId}`);
+            if (selectedCard) {
+                selectedCard.classList.add('selected');
+            }
+            
+            // Store the selected hotel
+            selectedHotel = hotelOptions.find(hotel => hotel.id === hotelId);
+            
+            // Update the cart summary
+            updateCartSummary();
+        }
+
+        // Select transport option
+        function selectTransport(transportId) {
+            // Remove selection from all transport cards
+            document.querySelectorAll('#transport-options .option-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Add selection to the clicked card
+            const selectedCard = document.getElementById(`transport-${transportId}`);
+            if (selectedCard) {
+                selectedCard.classList.add('selected');
+            }
+            
+            // Store the selected transport
+            selectedTransport = transportOptions.find(transport => transport.id === transportId);
+            
+            // Update the cart summary
+            updateCartSummary();
+        }
+
+        // Show comparison tabs
+        function showComparison(type) {
+            // Hide all comparison content
+            document.querySelectorAll('.comparison-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Show selected comparison content
+            document.getElementById(`${type}-comparison`).classList.add('active');
+            
+            // Update active tab
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Set active tab
+            const tabs = document.querySelectorAll('.tab');
+            if (type === 'hotels') {
+                tabs[0].classList.add('active');
+            } else {
+                tabs[1].classList.add('active');
+            }
+        }
+
+        // Load cart from localStorage
+        function loadCart() {
+            const cartData = localStorage.getItem('cartData');
+            if (cartData) {
+                cart = JSON.parse(cartData);
+            }
+        }
+
+        // Update cart summary
+        function updateCartSummary() {
+            const cartContainer = document.getElementById('cart-items');
+            const totalElement = document.getElementById('cart-total');
+            
+            cartContainer.innerHTML = '';
+            let total = 0;
+            
+            // Add departure location if available
+            const departureLocation = localStorage.getItem('departureLocation');
+            if (departureLocation) {
+                const locationItem = document.createElement('div');
+                locationItem.className = 'cart-item';
+                locationItem.innerHTML = `
+                    <div>
+                        <span>Departure from: ${departureLocation}</span>
+                    </div>
+                    <div>-</div>
+                `;
+                cartContainer.appendChild(locationItem);
+            }
+            
+            // Add destination items
+            cart.forEach(item => {
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                const itemTotal = item.price * item.persons;
+                cartItem.innerHTML = `
+                    <div>
+                        <span>${item.name}</span>
+                        <span>(${item.persons} person${item.persons > 1 ? 's' : ''})</span>
+                    </div>
+                    <div>₹${itemTotal.toLocaleString('en-IN')}</div>
+                `;
+                cartContainer.appendChild(cartItem);
+                total += itemTotal;
+            });
+            
+            // Add hotel if selected
+            if (selectedHotel) {
+                const hotelItem = document.createElement('div');
+                hotelItem.className = 'cart-item';
+                hotelItem.innerHTML = `
+                    <div>
+                        <span>${selectedHotel.name}</span>
+                        <span>(${selectedHotel.priceType})</span>
+                    </div>
+                    <div>₹${selectedHotel.price.toLocaleString('en-IN')}</div>
+                `;
+                cartContainer.appendChild(hotelItem);
+                total += selectedHotel.price;
+            }
+            
+            // Add transport if selected
+            if (selectedTransport) {
+                const transportItem = document.createElement('div');
+                transportItem.className = 'cart-item';
+                
+                let transportTotal = selectedTransport.price;
+                let transportText = '';
+                
+                if (selectedTransport.priceType === 'per person') {
+                    // Calculate total for all persons in cart
+                    const totalPersons = cart.reduce((sum, item) => sum + item.persons, 0);
+                    transportTotal = selectedTransport.price * totalPersons;
+                    transportText = `(${totalPersons} person${totalPersons > 1 ? 's' : ''})`;
+                }
+                
+                transportItem.innerHTML = `
+                    <div>
+                        <span>${selectedTransport.name}</span>
+                        <span>${transportText}</span>
+                    </div>
+                    <div>₹${transportTotal.toLocaleString('en-IN')}</div>
+                `;
+                cartContainer.appendChild(transportItem);
+                total += transportTotal;
+            }
+            
+            totalElement.textContent = total.toLocaleString('en-IN');
+        }
+
+        // Go back to destinations page
+        function goBack() {
+            window.location.href = 'payment.html';
+        }
+
+        // Proceed to checkout
+        function proceedToCheckout() {
+            // First check if user is logged in
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) {
+                alert('Please log in to proceed to checkout.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            if (!selectedHotel || !selectedTransport) {
+                alert('Please select both hotel and transportation options before proceeding to checkout.');
+                return;
+            }
+            
+            // Save selected options to localStorage
+            localStorage.setItem('selectedHotel', JSON.stringify(selectedHotel));
+            localStorage.setItem('selectedTransport', JSON.stringify(selectedTransport));
+            
+            // Redirect to payment page
+            window.location.href = 'payment.html';
+        }
+
+        // Update cart display
+        function updateCartDisplay() {
+            const cartItems = document.getElementById('cart-items');
+            const cartTotal = document.getElementById('cart-total');
+            const checkoutButton = document.getElementById('proceed-to-checkout-btn');
+            
+            // Get selected packages from localStorage
+            const selectedPackages = JSON.parse(localStorage.getItem('selectedPackages') || '[]');
+            
+            if (selectedPackages.length === 0) {
+                cartItems.innerHTML = '<p>Your cart is empty</p>';
+                cartTotal.textContent = 'Total: ₹0';
+                checkoutButton.disabled = true;
+                return;
+            }
+            
+            let total = 0;
+            let html = '';
+            
+            selectedPackages.forEach(package => {
+                const amount = package.price * package.persons;
+                total += amount;
+                
+                html += `
+                    <div class="cart-item">
+                        <div>
+                            <strong>${package.destination}</strong>
+                            <div>Persons: ${package.persons}</div>
+                        </div>
+                        <div>₹${amount.toLocaleString()}</div>
+                    </div>
+                `;
+            });
+            
+            cartItems.innerHTML = html;
+            cartTotal.textContent = `Total: ₹${total.toLocaleString()}`;
+            checkoutButton.disabled = false;
+        }
+
+        // Call updateCartDisplay when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            loadHotelOptions();
+            loadTransportOptions();
+            loadCart();
+            updateCartSummary();
+            updateCartDisplay();
+            
+            // Check if location is already saved
+            const departureLocation = localStorage.getItem('departureLocation');
+            if (departureLocation) {
+                const locationDisplay = document.getElementById('location-display');
+                locationDisplay.innerHTML = `Departure location set to: <span>${departureLocation}</span>`;
+                locationDisplay.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html> 
