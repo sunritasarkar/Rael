@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Destinations - Rael Escapes</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background: url('https://lp-cms-production.imgix.net/features/2019/05/Solo-Travel-in-Nature-acbfea52bfaf.jpg?w=1200&sharp=10&vib=20') no-repeat center center fixed; 
+            background-size: cover; 
+            color: white; 
+            text-align: center; 
+            min-height: 100vh; 
+        }
+        .container { 
+            width: 100%; 
+            min-height: 100vh; 
+            background: rgba(0, 0, 0, 0.6); 
+            backdrop-filter: blur(2px); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: flex-start; 
+            padding: 50px; 
+            animation: fadeIn 2s ease-in; 
+            position: relative;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 20px 50px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .user-info span {
+            color: #ff5722;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        .logout-btn {
+            background: linear-gradient(45deg, #ff5722, #e91e63);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(233, 30, 99, 0.3);
+        }
+        .logout-btn:hover {
+            transform: scale(1.1);
+        }
+        h1 { 
+            font-size: 3.5rem; 
+            text-transform: uppercase; 
+            margin-bottom: 20px; 
+            letter-spacing: 2px; 
+            animation: slideDown 1.5s ease-in-out; 
+            margin-top: 100px;
+            text-align: center;
+            width: 100%;
+        }
+        .budget-filter {
+            margin: 30px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        .budget-input-group {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            width: 100%;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .budget-input-group input {
+            padding: 12px 20px;
+            font-size: 1rem;
+            border-radius: 50px;
+            border: none;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            width: 180px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        .budget-input-group input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.3);
+        }
+        .budget-input-group .input-label {
+            font-size: 0.9rem;
+            color: #ff5722;
+            margin-bottom: 5px;
+            text-align: center;
+            width: 100%;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .budget-input-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        .budget-input-group button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(45deg, #ff5722, #e91e63);
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            min-width: 180px;
+        }
+        .budget-input-group button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
+            background: linear-gradient(45deg, #e91e63, #ff5722);
+        }
+        .budget-input-group button:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 10px rgba(233, 30, 99, 0.3);
+        }
+        .budget-info {
+            color: #ff5722;
+            font-weight: bold;
+            margin-top: 15px;
+            text-align: center;
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        .min-budget {
+            color: #4CAF50;
+            font-weight: bold;
+            margin-top: 15px;
+            padding: 8px 15px;
+            background: rgba(76, 175, 80, 0.2);
+            border-radius: 8px;
+            display: inline-block;
+            font-size: 1.1rem;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);
+            transition: all 0.3s ease;
+        }
+        .min-budget:hover {
+            background: rgba(76, 175, 80, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+        .destinations { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 30px; 
+            width: 90%; 
+            margin: 30px auto; 
+            max-width: 1400px;
+        }
+        .destination { 
+            background: rgba(255, 255, 255, 0.3); 
+            padding: 20px; 
+            border-radius: 15px; 
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); 
+            transition: transform 0.3s ease; 
+            animation: fadeInUp 1s ease-in; 
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .destination:hover { 
+            transform: scale(1.05); 
+            background: rgba(255, 255, 255, 0.6); 
+        }
+        .destination img { 
+            width: 100%; 
+            height: 200px; 
+            object-fit: cover; 
+            border-radius: 15px; 
+            margin-bottom: 15px;
+        }
+        .destination h2 { 
+            margin: 10px 0; 
+            font-size: 1.5rem; 
+            text-align: center;
+        }
+        .destination p { 
+            font-size: 1rem; 
+            margin-bottom: 15px;
+            text-align: center;
+            flex-grow: 1;
+        }
+        .price {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ff5722;
+            margin: 10px 0;
+            text-align: center;
+        }
+        .person-selector {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        .person-selector button {
+            background: linear-gradient(45deg, #ff5722, #e91e63);
+            color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(233, 30, 99, 0.3);
+            transition: all 0.3s ease;
+        }
+        .person-selector button:hover {
+            transform: scale(1.1);
+        }
+        .person-selector span {
+            font-size: 1.2rem;
+            min-width: 35px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .add-to-cart {
+            background: linear-gradient(45deg, #ff5722, #e91e63);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            width: 100%;
+            margin-top: 10px;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(233, 30, 99, 0.3);
+        }
+        .add-to-cart:hover {
+            transform: scale(1.05);
+        }
+        .cart-container {
+            position: relative;
+            width: 90%;
+            max-width: 800px;
+            margin: 40px auto;
+            background: rgba(255, 255, 255, 0.3);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+        }
+        .cart-container h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ff5722;
+            font-size: 1.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        .cart-item:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(5px);
+        }
+        .cart-item-details {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .cart-item-name {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        .cart-item-persons {
+            font-size: 1rem;
+            color: #ff5722;
+        }
+        .cart-container p {
+            text-align: center;
+            margin: 20px 0;
+            font-weight: bold;
+            font-size: 1.4rem;
+            color: #ff5722;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        .checkout-btn {
+            background: linear-gradient(45deg, #ff5722, #e91e63);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 300px;
+            margin: 20px auto;
+            display: block;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 1.1rem;
+        }
+        .checkout-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
+            background: linear-gradient(45deg, #e91e63, #ff5722);
+        }
+        .back { 
+            margin: 40px auto; 
+            text-decoration: none; 
+            color: white; 
+            background: linear-gradient(45deg, #ff5722, #e91e63); 
+            padding: 15px 30px; 
+            border-radius: 50px; 
+            font-size: 1.2rem; 
+            font-weight: bold; 
+            transition: transform 0.3s, background 0.3s; 
+            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+            display: inline-block;
+        }
+        .back:hover { 
+            background: linear-gradient(45deg, #e91e63, #ff5722); 
+            transform: scale(1.1); 
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeInUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="user-info">
+            <span id="welcome-message">Welcome, </span>
+        </div>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+    <div class="container">
+        <h1>Budget-Friendly Destinations</h1>
+        <p>Find your perfect destination within your budget!</p>
+        
+        <div class="budget-filter">
+            <div class="budget-input-group">
+                <div class="budget-input-wrapper">
+                    <span class="input-label">Budget Per Person</span>
+                    <input type="number" id="budget-input" placeholder="Enter amount (₹)" min="0">
+                </div>
+                <div class="budget-input-wrapper">
+                    <span class="input-label">Number of People</span>
+                    <input type="number" id="members-input" placeholder="Enter count" min="1" value="1">
+                </div>
+                <button onclick="filterByBudget()">Filter Destinations</button>
+            </div>
+            <div class="budget-info">
+                Total Budget: ₹<span id="total-budget">0</span>
+                <div class="min-budget">Minimum budget required: ₹<span id="min-budget">0</span></div>
+            </div>
+        </div>
+
+        <div class="destinations" id="destinations">
+            <!-- Destination cards will be added here -->
+        </div>
+
+        <div class="cart-container">
+            <h3>Your Cart</h3>
+            <div id="cart-items"></div>
+            <p>Total: ₹<span id="cart-total">0</span></p>
+            <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
+        </div>
+
+        <a href="index.html" class="back">Back to Home</a>
+    </div>
+
+    <script>
+        // Check if user is logged in
+        function checkAuth() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+            document.getElementById('welcome-message').textContent = `Welcome, ${currentUser.username}`;
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'login.html';
+        }
+
+        const destinations = [
+            {name: 'Bali, Indonesia', image: 'https://images.unsplash.com/photo-1537992204474-1133b614f224?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80', desc: 'An island paradise with lush forests.', price: 85000},
+            {name: 'Paris, France', image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80', desc: 'City of love with iconic landmarks.', price: 175000},
+            {name: 'Sydney, Australia', image: 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80', desc: 'Famous for the Opera House.', price: 195000},
+            {name: 'Rome, Italy', image: 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80', desc: 'Ancient ruins and rich history.', price: 145000},
+            {name: 'Dubai, UAE', image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80', desc: 'Modern architecture and luxury.', price: 125000},
+            {name: 'Kyoto, Japan', image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80', desc: 'Tranquil temples and cherry blossoms.', price: 165000},
+            {name: 'Cape Town, SA', image: 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80', desc: 'Scenic views and vibrant culture.', price: 135000},
+            {name: 'Amsterdam, NL', image: 'https://images.unsplash.com/photo-1534351590666-13e3e96b5017?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80', desc: 'Charming canals and rich art.', price: 155000},
+            {name: 'Barcelona, Spain', image: 'https://images.unsplash.com/photo-1583422409516-2895a77efded?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80', desc: 'Gaudi architecture and beaches.', price: 145000},
+            {name: 'Prague, Czechia', image: 'https://images.unsplash.com/photo-1558056198-641a0ac8b55e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80', desc: 'Medieval charm and vibrant nightlife.', price: 115000},
+            {name: 'Istanbul, Turkey', image: 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80', desc: 'A mesmerizing blend of ancient architecture and vibrant culture.', price: 95000},
+            {name: 'Petra, Jordan', image: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80', desc: 'An archaeological wonder carved into rose-red cliffs.', price: 105000},
+            {name: 'Vancouver, Canada', image: 'https://images.unsplash.com/photo-1509807995916-c332365e2d9e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80', desc: 'Stunning natural beauty with mountains and forests.', price: 185000},
+            {name: 'Reykjavik, Iceland', image: 'https://images.unsplash.com/photo-1529968030586-3a01fc6ac9ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80', desc: 'Gateway to Northern Lights and geothermal wonders.', price: 195000},
+            {name: 'Havana, Cuba', image: 'https://images.unsplash.com/photo-1539037116277-4db20889f2d4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80', desc: 'Colorful streets and rich Cuban heritage.', price: 125000},
+            {name: 'Santorini, Greece', image: 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80', desc: 'Stunning white architecture and Mediterranean charm.', price: 155000},
+            {name: 'Machu Picchu, Peru', image: 'https://images.unsplash.com/photo-1525598912003-663126342e1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80', desc: 'Ancient Incan citadel set high in the Andes Mountains.', price: 165000},
+            {name: 'Maldives', image: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80', desc: 'Crystal clear waters and overwater bungalows.', price: 225000},
+            {name: 'New York City, USA', image: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80', desc: 'The city that never sleeps with iconic skyline.', price: 185000},
+            {name: 'Venice, Italy', image: 'https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80', desc: 'Romantic canals and historic architecture.', price: 165000},
+            {name: 'Great Barrier Reef, Australia', image: 'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80', desc: 'World\'s largest coral reef system with vibrant marine life.', price: 195000},
+            {name: 'Marrakech, Morocco', image: 'https://images.unsplash.com/photo-1553603227-2358affb1ab7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80', desc: 'Vibrant souks and stunning architecture.', price: 115000},
+            {name: 'Swiss Alps', image: 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80', desc: 'Majestic mountains and pristine lakes.', price: 205000},
+            {name: 'Rio de Janeiro, Brazil', image: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80', desc: 'Vibrant culture and stunning beaches.', price: 175000},
+            {name: 'Taj Mahal, India', image: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80', desc: 'Iconic marble mausoleum and symbol of love.', price: 75000},
+            {name: 'Bangkok, Thailand', image: 'https://images.unsplash.com/photo-1528181304800-259b08848526?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80', desc: 'Vibrant street life and ornate temples.', price: 95000},
+            {name: 'Copenhagen, Denmark', image: 'https://images.unsplash.com/photo-1513622470522-26c3c8a854bc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80', desc: 'Nordic charm and innovative design.', price: 185000},
+            {name: 'Cusco, Peru', image: 'https://images.unsplash.com/photo-1531968455001-5c5272a41129?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80', desc: 'Historic heart of the Inca Empire.', price: 145000},
+            {name: 'Hawaii, USA', image: 'https://images.unsplash.com/photo-1542259009477-d62545415737?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80', desc: 'Tropical paradise with volcanic landscapes.', price: 195000},
+            {name: 'Jerusalem, Israel', image: 'https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80', desc: 'Sacred city with rich religious history.', price: 155000}
+        ];
+
+        let cart = [];
+
+        function loadDestinations(dests = destinations) {
+            const container = document.getElementById('destinations');
+            container.innerHTML = '';
+            dests.forEach(dest => {
+                const card = document.createElement('div');
+                card.className = 'destination';
+                card.innerHTML = `
+                    <img src="${dest.image}" alt="${dest.name}">
+                    <h2>${dest.name}</h2>
+                    <p>${dest.desc}</p>
+                    <div class="price">₹${dest.price.toLocaleString('en-IN')}</div>
+                    <div class="person-selector">
+                        <button onclick="updatePersons('${dest.name}', -1)">-</button>
+                        <span id="persons-${dest.name}">1</span>
+                        <button onclick="updatePersons('${dest.name}', 1)">+</button>
+                    </div>
+                    <button class="add-to-cart" onclick="addToCart('${dest.name}', ${dest.price})">Add to Cart</button>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function updatePersons(destName, change) {
+            const personsElement = document.getElementById(`persons-${destName}`);
+            let currentPersons = parseInt(personsElement.textContent);
+            currentPersons = Math.max(1, Math.min(10, currentPersons + change));
+            personsElement.textContent = currentPersons;
+        }
+
+        function filterByBudget() {
+            const budgetPerPerson = parseFloat(document.getElementById('budget-input').value);
+            const members = parseInt(document.getElementById('members-input').value) || 1;
+            
+            if (isNaN(budgetPerPerson) || budgetPerPerson < 0) {
+                alert('Please enter a valid budget amount per person');
+                return;
+            }
+
+            if (isNaN(members) || members < 1) {
+                alert('Please enter a valid number of members');
+                return;
+            }
+
+            const totalBudget = budgetPerPerson * members;
+            document.getElementById('total-budget').textContent = totalBudget.toLocaleString('en-IN');
+
+            // Find minimum budget required per person
+            const minBudgetPerPerson = Math.min(...destinations.map(dest => dest.price));
+            const minBudget = minBudgetPerPerson * members;
+            document.getElementById('min-budget').textContent = minBudget.toLocaleString('en-IN');
+
+            // Filter destinations based on budget per person
+            const filtered = destinations.filter(dest => dest.price <= budgetPerPerson);
+            loadDestinations(filtered);
+
+            if (filtered.length === 0) {
+                alert(`No destinations available within your budget of ₹${budgetPerPerson.toLocaleString('en-IN')} per person.`);
+            }
+        }
+
+        // Update total budget when members change
+        document.getElementById('members-input').addEventListener('change', function() {
+            const budgetPerPerson = parseFloat(document.getElementById('budget-input').value) || 0;
+            const members = parseInt(this.value) || 1;
+            const totalBudget = budgetPerPerson * members;
+            document.getElementById('total-budget').textContent = totalBudget.toLocaleString('en-IN');
+            
+            // Update minimum budget
+            const minBudgetPerPerson = Math.min(...destinations.map(dest => dest.price));
+            const minBudget = minBudgetPerPerson * members;
+            document.getElementById('min-budget').textContent = minBudget.toLocaleString('en-IN');
+        });
+
+        // Update total budget when budget per person changes
+        document.getElementById('budget-input').addEventListener('input', function() {
+            const budgetPerPerson = parseFloat(this.value) || 0;
+            const members = parseInt(document.getElementById('members-input').value) || 1;
+            const totalBudget = budgetPerPerson * members;
+            document.getElementById('total-budget').textContent = totalBudget.toLocaleString('en-IN');
+        });
+
+        function addToCart(name, price) {
+            const existingItem = cart.find(item => item.name === name);
+            if (existingItem) {
+                alert('This destination is already in your cart!');
+                return;
+            }
+            const persons = parseInt(document.getElementById(`persons-${name}`).textContent);
+            cart.push({ name, price, persons });
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartContainer = document.getElementById('cart-items');
+            const totalElement = document.getElementById('cart-total');
+            
+            cartContainer.innerHTML = '';
+            let total = 0;
+            
+            cart.forEach(item => {
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                const itemTotal = item.price * item.persons;
+                cartItem.innerHTML = `
+                    <div class="cart-item-details">
+                        <span class="cart-item-name">${item.name}</span>
+                        <span class="cart-item-persons">${item.persons} person${item.persons > 1 ? 's' : ''}</span>
+                    </div>
+                    <div>
+                        <span>₹${itemTotal.toLocaleString('en-IN')}</span>
+                        <button onclick="removeFromCart('${item.name}')" style="background: none; border: none; color: red; cursor: pointer;">×</button>
+                    </div>
+                `;
+                cartContainer.appendChild(cartItem);
+                total += itemTotal;
+            });
+            
+            totalElement.textContent = total.toLocaleString('en-IN');
+        }
+
+        function removeFromCart(name) {
+            cart = cart.filter(item => item.name !== name);
+            updateCart();
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+            
+            // Save cart data to localStorage for the next page
+            localStorage.setItem('cartData', JSON.stringify(cart));
+            
+            // Redirect to the travel options page
+            window.location.href = 'travel-options.html';
+        }
+
+        // Load destinations when the page loads
+        window.onload = function() {
+            loadDestinations();
+            checkAuth();
+        };
+    </script>
+</body>
+</html> 
